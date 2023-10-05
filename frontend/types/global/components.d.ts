@@ -174,6 +174,7 @@ declare module 'vue' {
     VHover: typeof import('vuetify/components')['VHover']
     VIcon: typeof import('vuetify/components')['VIcon']
     VImg: typeof import('vuetify/components')['VImg']
+    VInput: typeof import('vuetify/components')['VInput']
     VirtualGrid: typeof import('./../../src/components/Layout/VirtualGrid/VirtualGrid.vue')['default']
     VItemGroup: typeof import('vuetify/components')['VItemGroup']
     VList: typeof import('vuetify/components')['VList']
