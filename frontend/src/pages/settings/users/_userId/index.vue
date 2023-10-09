@@ -217,7 +217,10 @@
                       </div>
                     </VCol>
                     <VCol>
-                      <VBtn @click="addTagDialogOpen = true">
+                      <VBtn
+                        color="secondary"
+                        variant="elevated"
+                        @click="addTagDialogOpen = true">
                         {{ t('settings.users.tabs.parentalControl.addBlockedTag') }}
                       </VBtn>
                     </VCol>
