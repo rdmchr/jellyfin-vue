@@ -63,6 +63,7 @@
               color="primary"
               variant="elevated"
               :loading="loading"
+              class="ml-2"
               @click="createUser">
               {{ t('settings.users.new') }}
             </VBtn>
