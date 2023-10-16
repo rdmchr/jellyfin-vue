@@ -4,6 +4,7 @@
 import {
   addMilliseconds,
   format,
+  formatDistanceToNow,
   formatDuration,
   intervalToDuration
 } from 'date-fns';
@@ -137,4 +138,13 @@ export function getTotalEndsAtTime(
 
     return getEndsAtTime(ticks).value;
   });
+}
+
+/**
+ * Calculates a relative timestamp for a given date
+ * Example: 1 hour ago, 2 days ago, 3 months ago
+ * @param date - Date to calculate
+ */
+export function getRelativeTime(date: Date): string {
+  return useDateFns(formatDistanceToNow, date).value;
 }
