@@ -17,58 +17,43 @@
       </VBtn>
     </template>
     <template #content>
-      <VCol>
-        <VTable>
-          <thead>
-            <tr>
-              <th
-                v-for="{ text, value } in headers"
-                :id="value"
-                :key="value">
-                {{ text }}
-              </th>
-              <th scope="col">
-              <!--for avatar-->
-              </th>
-              <th scope="col">
-              <!--for edit btn-->
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="user in users"
-              :key="user.Id ?? undefined">
-              <td
-                v-for="{ value } in headers"
-                :key="value">
-                {{
-                  value !== 'LastActivityDate'
-                    ? user[value]
-                    : useDateFns(
-                      formatRelative,
-                      parseJSON(user[value] ?? "2023-02-02T02:02:02Z"), //FIXME: using 'unknown' doesnt work here? its used somewhere else in the code as well, does that even work there?
-                      new Date()
-                    ).value
-                }}
-              </td>
-              <td>
-                <VImg
-                  :src="`${remote.sdk.api?.basePath}/Users/${user['Id']}/Images/Primary?height=50&tag=${user['PrimaryImageTag']}&quality=90`"
-                  height="50px"
-                  width="auto" />
-              </td>
-              <td>
-                <VBtn
+      <VRow>
+        <VCard
+          v-for="user in users"
+          :key="user.Id"
+          class="mx-2"
+          width="256px"
+          @click="$router.push(`/settings/users/${user['Id']}`)">
+          <VAvatar
+            size="256"
+            :rounded="false">
+            <VImg
+              :src="`${remote.sdk.api?.basePath}/Users/${user['Id']}/Images/Primary?height=256&tag=${user['PrimaryImageTag']}&quality=90`"
+              width="256"
+              height="256"
+              cover>
+              <template #placeholder>
+                <VAvatar
+                  :rounded="false"
                   color="primary"
-                  @click="$router.push(`/settings/users/${user['Id']}`)">
-                  {{ t('settings.users.edit') }}
-                </VBtn>
-              </td>
-            </tr>
-          </tbody>
-        </VTable>
-      </VCol>
+                  size="256">
+                  <VIcon size="256">
+                    <IMdiAccount />
+                  </VIcon>
+                </VAvatar>
+              </template>
+            </VImg>
+          </VAvatar>
+          <VCardTitle>
+            {{ user.Name }}
+          </VCardTitle>
+          <VCardSubtitle>
+            {{ $t('settings.users.lastActivityDate', {
+              value: user.LastActivityDate ? getRelativeTime(new Date(user.LastActivityDate)) : t('unknown')})
+            }}
+          </VCardSubtitle>
+        </VCard>
+      </VRow>
     </template>
   </SettingsPage>
 </template>
@@ -79,12 +64,11 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { UserDto } from '@jellyfin/sdk/lib/generated-client';
 import { getUserApi } from '@jellyfin/sdk/lib/utils/api/user-api';
-import { formatRelative, parseJSON } from 'date-fns';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useDateFns, useRemote } from '@/composables';
+import { useRemote } from '@/composables';
+import {getRelativeTime} from '@/utils/time';
 
 const { t } = useI18n();
 const remote = useRemote();
@@ -92,15 +76,4 @@ const remote = useRemote();
 const users = ref(
   (await remote.sdk.newUserApi(getUserApi).getUsers()).data ?? []
 );
-
-const headers = computed<{ text: string; value: keyof UserDto }[]>(() => [
-  {
-    text: t('username'),
-    value: 'Name'
-  },
-  {
-    text: t('settings.users.lastActivityDate'),
-    value: 'LastActivityDate'
-  }
-]);
 </script>

@@ -1,5 +1,7 @@
 <template>
-  <VAvatar :size="size">
+  <VAvatar
+    :size="size"
+    :rounded="false">
     <VImg
       :src="url"
       :width="size"
